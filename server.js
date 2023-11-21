@@ -1,27 +1,41 @@
-require("dotenv").config();
 const express = require("express");
 const app = express();
-const PORT = 3000;
-const session = require("express-session");
-const methodOverride = require("method-override");
-
+const morgan = require("morgan");
 const authRoutes = require("./controllers/authController");
-const placeRoutes = require("./controllers/placeController");
-const reservationRoutes = require("./controllers/reservationController");
-const reviewRoutes = require("./controllers/reviewController");
+const reviewController = require("./controllers/reviewController")
 
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
+const session = require("express-session");
+app.use(
+  session({ secret: "somestring", cookie: { maxAge: 3600000 } })
+);
+
+const cors = require("cors");
+require("dotenv").config();
+
 app.use(express.static("public"));
-app.use(session({ secret: "where2", cookie: { maxAge: 6000000 } }));
-
+app.use(morgan("tiny"));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-app.use("/user", authRoutes);
-app.use("/place", placeRoutes);
-app.use("/reservation", reservationRoutes);
-app.use("/review", reviewRoutes);
+app.use(cors());
 
 
+app.use(authRoutes);
 
-app.listen(PORT, () => console.log("Where2 is listening on port:", PORT));
+// app.use((req, res, next) => {
+//   if (!req.session.userId) {
+//     res.status(401).json({ message: "Unauthorized" });
+//     return;
+//   }
+
+//   next();
+// });
+
+app.use("/reviews", reviewController)
+
+app.get("/", (req, res) => {
+  res.json({ message: "home" });
+});``
+
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log("listening on", PORT));
