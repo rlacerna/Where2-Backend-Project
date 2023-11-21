@@ -1,15 +1,15 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const cors = require("cors");
 const authRoutes = require("./controllers/authController");
 const reviewController = require("./controllers/reviewController")
 
 const session = require("express-session");
 app.use(
-  session({ secret: "somestring", cookie: { maxAge: 7400 } })
+  session({ secret: "somestring", cookie: { maxAge: 740000 } })
 );
 
-const cors = require("cors");
 require("dotenv").config();
 
 app.use(express.static("public"));
@@ -21,14 +21,14 @@ app.use(cors());
 
 app.use(authRoutes);
 
-app.use((req, res, next) => {
-  if (!req.session.userId) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
+// app.use((req, res, next) => {
+//   if (!req.session.userId) {
+//     res.status(401).json({ message: "Unauthorized" });
+//     return;
+//   }
 
-  next();
-});
+//   next();
+// });
 
 app.use("/reviews", reviewController)
 

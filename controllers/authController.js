@@ -19,10 +19,10 @@ router.post("/login", async (req, res) => {
       if (result) {
         req.session.userId = userToLogin._id;
         req.session.username = userToLogin.username;
-
+        res.json(req.session);
         res.json(userToLogin);
       } else {
-        res.status(401).json({ message: "wrong pw" });
+        res.status(401).json({ message: "wrong password" });
       }
     });
   }
@@ -47,6 +47,7 @@ router.post("/signup", async (req, res) => {
 router.get("/logout", (req, res) => {
   req.session.destroy();
   res.json({ message: "Logged out" });
+  res.redirect("/");
 });
 
 module.exports = router;
