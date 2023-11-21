@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
       if (result) {
         req.session.userId = userToLogin._id;
         req.session.username = userToLogin.username;
-        res.json(req.session);
+        
         res.json(userToLogin);
       } else {
         res.status(401).json({ message: "wrong password" });
@@ -51,3 +51,5 @@ router.get("/logout", (req, res) => {
 });
 
 module.exports = router;
+
+
